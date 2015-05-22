@@ -41,7 +41,6 @@ enemyMaker();
 // enemy position update
 var enemyUpdate = function (enemies) {
 	var enemySelect = gameCanvas.selectAll('circle').data(enemies);
-
 	enemySelect.enter().append('circle')
 		.attr ('r', 10)
 		.classed ('enemy', true)
@@ -51,7 +50,7 @@ var enemyUpdate = function (enemies) {
 };
 enemyUpdate(enemies);
 
-//setting delay between turns
+// setting delay between turns
 var initiate = function() {
 	setInterval ( enemyPositionUpdate, 1000 );
 };
@@ -59,18 +58,22 @@ var initiate = function() {
 // transitions
 var enemyPositionUpdate = function () {
 	var enemySelect = gameCanvas.selectAll('circle.enemy').data(enemies);
-
+	console.log(enemies)
 
 	enemySelect.transition()
 		.duration(1000)
 		.attr('cx', function() { return getRandomInt(0, 590) })
 		.attr('cy', function() { return getRandomInt(0, 590) })
+		.tween("text", function() {
+		  var i = d3.interpolateRound(0, 100);
+		  return function(t) {
+		    this.textContent = i(t);
+		  };
+		});	
 };
-
 initiate()
 
 //=============== Dragging =================
-
 
 var drag = d3.behavior.drag()
 	.on('drag', function() {
@@ -98,19 +101,28 @@ var drag = d3.behavior.drag()
 							return 8
 						}})
 	});
- 
  d3.select('.hero').call(drag);
 
-//=============== Collision ================
 
+//=============== Scoring ===================
 
+var currentScore = 0;
+var highScore = 0;
 
-var checkCollision = function () {
-	var highScore = d3.select('.high-score').text('highScore')
-	var currentScore = d3.select('.current-score').text('score')
+var scoreKeeper	= function() {
+	currentScore += 100;
+	var hScore = d3.select('.high-score').text('High Score:' + highScore);
+	var currScore = d3.select('.current-score').text('Score: ' + currentScore);
+
 	if (currentScore > highScore) {
 		highScore = currentScore;
 	};
+};
+setInterval(scoreKeeper, 100)
+
+//=============== Collision ================
+
+var checkCollision = function () {
 
 	d3.select('circle').each(function() {
 		var heroR = parseFloat(d3.select('.hero').attr('r'));
@@ -122,16 +134,13 @@ var checkCollision = function () {
 
 		var collisionY = (heroY + heroR) - (enemyY + enemyR);
 		var collisionX = (heroX + heroR) - (enemyX + enemyR);
-		var collision = Math.sqrt ( collisionX ^ 2 + collisionY ^ 2 );
-		console.log( "collision = " + collision )
+		var collision = Math.sqrt( Math.pow(collisionX, 2) + Math.pow(collisionY, 2));
 
 		if (collision < (heroR + enemyR)) {
-			console.log( "A collision!" + collision )
 			return currentScore = 0;
 		};
 	});
 };
-
 setInterval(checkCollision, 100);
 
 
