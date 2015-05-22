@@ -21,11 +21,10 @@ var hero = d3.select ( '.hero' )
 
 //=================Enemies====================//
 
-
-// Enemies
 var nEnemies = 10;
 var enemies = []
 
+// enemy maker
 var enemyMaker = function () {
 	for (i=0; i <= nEnemies; i++) {
 		enemy = new Object();
@@ -37,7 +36,6 @@ var enemyMaker = function () {
 	console.log(enemies)
 	return enemies;
 };
-
 enemyMaker();
 
 // enemy position update
@@ -51,7 +49,6 @@ var enemyUpdate = function (enemies) {
 		.attr ('cy', function(d) { return d.y; });
 	enemySelect.exit()
 };
-
 enemyUpdate(enemies);
 
 //setting delay between turns
@@ -62,6 +59,7 @@ var initiate = function() {
 // transitions
 var enemyPositionUpdate = function () {
 	var enemySelect = gameCanvas.selectAll('circle.enemy').data(enemies);
+
 
 	enemySelect.transition()
 		.duration(1000)
@@ -99,38 +97,41 @@ var drag = d3.behavior.drag()
 						} else {
 							return 8
 						}})
-	console.log(mx,my);
 	});
  
  d3.select('.hero').call(drag);
 
 //=============== Collision ================
 
+
+
 var checkCollision = function () {
 	var highScore = d3.select('.high-score').text('highScore')
 	var currentScore = d3.select('.current-score').text('score')
 	if (currentScore > highScore) {
-		return highScore = currentScore;
+		highScore = currentScore;
 	};
 
-	enemies.each(function() {
-		var heroX;
-		var heroY;
-		var heroR;
-		var enemyX;
-		var enemyY;
-		var enemyR;
-	})
+	d3.select('circle').each(function() {
+		var heroR = parseFloat(d3.select('.hero').attr('r'));
+		var heroY = parseFloat(d3.select('.hero').attr('cy'));
+		var heroX = parseFloat(d3.select('.hero').attr('cx'));
+		var enemyR = parseFloat(d3.select('.enemy').attr('r'));
+		var enemyY = parseFloat(d3.select('.enemy').attr('cy'));
+		var enemyX = parseFloat(d3.select('.enemy').attr('cx'));
 
-	var heroR = Math.floor(parseFloat(d3.select('.hero').attr('r')));
-	var heroY = Math.floor(parseFloat(d3.select('.hero').attr('y')));
-	var heroX = Math.floor(parseFloat(d3.select('.hero').attr('x')));
-	var enemyR = Math.floor(parseFloat(d3.select('.enemy').attr('r')));
-	var enemyY = Math.floor(parseFloat(d3.select('.enemy').attr('y')));
-	var enemyX = Math.floor(parseFloat(d3.select('.enemy').attr('x')));
+		var collisionY = (heroY + heroR) - (enemyY + enemyR);
+		var collisionX = (heroX + heroR) - (enemyX + enemyR);
+		var collision = Math.sqrt ( collisionX ^ 2 + collisionY ^ 2 );
+		console.log( "collision = " + collision )
 
-	heroY - enemyY
+		if (collision < (heroR + enemyR)) {
+			console.log( "A collision!" + collision )
+			return currentScore = 0;
+		};
+	});
+};
 
-	Math.sqrt(x ^ 2  + y ^ 2)
-}
+setInterval(checkCollision, 100);
+
 
