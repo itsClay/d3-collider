@@ -1,7 +1,7 @@
 // Canvas
 var canvasSize = {}
-canvasSize.x = 550;
-canvasSize.y = 600;
+canvasSize.x = 500;
+canvasSize.y = 500;
 
 //random integer
 function getRandomInt(min, max) {
@@ -19,7 +19,7 @@ var hero = d3.select ( '.hero' )
 	.attr('cy', canvasSize.y / 2)
 	.attr('fill', 'black');
 
-//===========================================//
+//=================Enemies====================//
 
 
 // Enemies
@@ -71,8 +71,66 @@ var enemyPositionUpdate = function () {
 
 initiate()
 
-// Path data generator
-// var line = d3.svg.line()
-//     .x(function(d) { return d.x; })
-//     .y(function(d) { return d.y; })
-//     .interpolate("basis");
+//=============== Dragging =================
+
+
+var drag = d3.behavior.drag()
+	.on('drag', function() {
+		var mx = d3.mouse(this)[0];
+		var my = d3.mouse(this)[1];
+		d3.select(this)
+		.attr('cx', function () { 
+						if (mx <= canvasSize.x && mx >= 0 ) { 
+							return mx	
+						}
+						else if (mx > canvasSize.x) {
+							return canvasSize.x -8
+						} 
+						else {
+							return 8
+						}
+					})
+		.attr('cy', function () { 
+						if (my <= canvasSize.y && my >= 0) { 
+							return my	
+						}
+						else if (my > canvasSize.y) {
+							return canvasSize.y - 8
+						} else {
+							return 8
+						}})
+	console.log(mx,my);
+	});
+ 
+ d3.select('.hero').call(drag);
+
+//=============== Collision ================
+
+var checkCollision = function () {
+	var highScore = d3.select('.high-score').text('highScore')
+	var currentScore = d3.select('.current-score').text('score')
+	if (currentScore > highScore) {
+		return highScore = currentScore;
+	};
+
+	enemies.each(function() {
+		var heroX;
+		var heroY;
+		var heroR;
+		var enemyX;
+		var enemyY;
+		var enemyR;
+	})
+
+	var heroR = Math.floor(parseFloat(d3.select('.hero').attr('r')));
+	var heroY = Math.floor(parseFloat(d3.select('.hero').attr('y')));
+	var heroX = Math.floor(parseFloat(d3.select('.hero').attr('x')));
+	var enemyR = Math.floor(parseFloat(d3.select('.enemy').attr('r')));
+	var enemyY = Math.floor(parseFloat(d3.select('.enemy').attr('y')));
+	var enemyX = Math.floor(parseFloat(d3.select('.enemy').attr('x')));
+
+	heroY - enemyY
+
+	Math.sqrt(x ^ 2  + y ^ 2)
+}
+

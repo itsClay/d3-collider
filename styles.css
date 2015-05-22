@@ -7,14 +7,16 @@ Feel free to use it if you like. */
 
 .gameCanvas {
 background-color: red;
+border-radius: 5px;
+margin: 0 auto;
 }
 
 .enemy {
-  fill: white;
+  fill: black;
 }
 
 .hero {
-  fill: black;
+  fill: white;
 }
 
 .update {
