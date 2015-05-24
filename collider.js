@@ -58,7 +58,6 @@ var initiate = function() {
 // transitions
 var enemyPositionUpdate = function () {
 	var enemySelect = gameCanvas.selectAll('circle.enemy').data(enemies);
-	console.log(enemies)
 
 	enemySelect.transition()
 		.duration(1000)
@@ -124,7 +123,7 @@ setInterval(scoreKeeper, 100)
 
 var checkCollision = function () {
 
-	d3.select('circle').each(function() {
+	d3.selectAll('circle').each(function() {
 		var heroR = parseFloat(d3.select('.hero').attr('r'));
 		var heroY = parseFloat(d3.select('.hero').attr('cy'));
 		var heroX = parseFloat(d3.select('.hero').attr('cx'));
@@ -134,9 +133,14 @@ var checkCollision = function () {
 
 		var collisionY = (heroY + heroR) - (enemyY + enemyR);
 		var collisionX = (heroX + heroR) - (enemyX + enemyR);
-		var collision = Math.sqrt( Math.pow(collisionX, 2) + Math.pow(collisionY, 2));
+
+		// var collisionX = enemyX - heroX
+		// var collisionY = enemyY - heroY
+
+		var collision = Math.sqrt( Math.pow(collisionX, 2) + Math.pow(collisionY, 2) );
 
 		if (collision < (heroR + enemyR)) {
+			console.log("we had a collision: " + collision)
 			return currentScore = 0;
 		};
 	});
